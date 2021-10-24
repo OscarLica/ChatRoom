@@ -1,0 +1,47 @@
+﻿@model ChatRoomsViewModels
+@{ Layout = null;}
+<div class="msg_history">
+    <input asp-for="ChatRoomName" type="hidden"/>
+    <input asp-for="UserId" type="hidden" />
+    <input asp-for="ChatRoomId" type="hidden" />
+    @foreach (var chat in Model.UserChat)
+    {
+        @if (Model.UserId == chat.UserId)
+        {
+            <div class="incoming_msg">
+                <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                <div class="received_msg">
+                    <div class="received_withd_msg">
+                        <p>
+                            @chat.mensaje
+                        </p>
+                        <span class="time_date"> @chat.fecha.ToShortDateString()</span>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="outgoing_msg">
+                <div class="sent_msg">
+                    <p>
+                        @chat.mensaje
+                    </p>
+                    <span class="time_date">@chat.fecha.ToShortDateString()</span>
+                </div>
+            </div>
+        }
+    }
+
+</div>
+<div class="type_msg">
+    <div class="input_msg_write">
+        <input type="text" class="write_msg" placeholder="Type a message" id="messageText" />
+        <button class="msg_send_btn" type="button" id="btnSend"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+    </div>
+</div>
+<link href="~/css/chatrooms.css" rel="stylesheet" />
+@section Scripts{
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/hubConnection.js"></script>
+}

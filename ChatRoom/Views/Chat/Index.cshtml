@@ -1,0 +1,18 @@
+﻿@model ChatRoomsViewModels
+<input asp-for="UserId" type="hidden" />
+<div class="page-content page-container" id="page-content">
+    <div class="padding">
+        <div class="row">
+            <div class="col-sm-12">
+                <partial name="_ChatRoomsList" model="Model.chatRooms" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="chat-room-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+</div>
+@section Scripts{
+    <script src="~/js/chatrooms.js"></script>
+    <script src="~/js/hubConnectionModulo.js"></script>
+}

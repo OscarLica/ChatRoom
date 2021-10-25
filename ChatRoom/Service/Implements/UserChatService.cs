@@ -32,7 +32,7 @@ namespace ChatRoom.Service.Implements
         /// <returns></returns>
         public async Task CreateChat(UserChatDTO userChatDTO)
         {
-            var user = await _Context.UserChatRooms.FirstOrDefaultAsync(x => x.UserId == userChatDTO.UserId);
+            var user = await _Context.UserChatRooms.FirstOrDefaultAsync(x => x.UserId == userChatDTO.UserId && x.ChatRoomId == userChatDTO.chatroomid);
             if (user is null)
                 await _Context.UserChatRooms.AddAsync(new Models.UserChatRooms { UserId = userChatDTO.UserId, ChatRoomId = userChatDTO.chatroomid });
             var usuario = await _Context.User.FirstOrDefaultAsync(x => x.UserId == userChatDTO.UserId);

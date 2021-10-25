@@ -1,21 +1,17 @@
 ﻿$(document).ready(() => {
-   
+    /** Id de la sala de chat */
+    var chatRoomId = $("#ChatRoomId").val();
+
+     /* si existe una sala de chat activa inicializamos signalR con la sala de chat*/
+    if (chatRoomId) {
+        var hubModul = Module.get("hub");
+        hubModul.initConnection(chatRoomId);
+        hubModul.addEventSend();
+    }
+
     $(document).on("click", "a[data-chat-room]", function () {
         let roomId = $(this).data("chatRoom");
-        let user = $(this).data("chatUser");
-
-        $.get("/Chat/ChatRooms/" + roomId).then(response => {
-            $(".mesgs").empty();
-            $(".mesgs").append(response);
-
-            let name = $("#ChatRoomName").val();
-            $("#chatName").text(name);
-            var hubModul = Module.get("hub");
-            hubModul.initConnection();
-            hubModul.addEventSend();
-        });
-
-        //window.location.href = "/Chat/ChatRooms/" + roomId;
+        window.location.href = "/Chat/Index?chatroomId=" + roomId;
     });
 
     $(document).on("click", "button[data-new-chat-room]", function () {
@@ -34,8 +30,9 @@
         let chatroom = formValidation.GetDataForm("data-name", "name");
 
         $.post("/ChatRoom/Formulario", chatroom).then((response) => {
-            toastr["success"]("Chat room created succesfully")
             $("#chat-room-modal").modal("hide");
+            toastr["success"]("Chat room created succesfully");
+            window.location.reload();
         });
     });
 

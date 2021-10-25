@@ -30,17 +30,20 @@ namespace ChatRoom.Controllers
         /// </summary>
         private readonly IChatRoomService _ChatRoomService;
 
+        private readonly IUserService _UserService;
+
         /// <summary>
         ///     Constructor base inicializa dependencias
         /// </summary>
         /// <param name="userManager"></param>
         /// <param name="userChatService"></param>
         /// <param name="chatRoomService"></param>
-        public ChatController(UserManager<IdentityUser> userManager, IUserChatService userChatService, IChatRoomService chatRoomService)
+        public ChatController(UserManager<IdentityUser> userManager, IUserChatService userChatService, IChatRoomService chatRoomService, IUserService userService)
         {
             _UserManager = userManager;
             _UserChatService = userChatService;
             _ChatRoomService = chatRoomService;
+            _UserService = userService;
         }
 
         /// <summary>
@@ -48,15 +51,19 @@ namespace ChatRoom.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string chatroomId)
         {
             var currentUser = await _UserManager.GetUserAsync(User);
+            var chatroom = await _ChatRoomService.GetByChatRoomId(chatroomId);
             ChatRoomsViewModels chatRoomsViewModels = new ChatRoomsViewModels
             {
                 UserId = currentUser.Id,
-                chatRooms = await _ChatRoomService.GetAll()
-
+                ChatRoomId = chatroom == null ? null : chatroomId,
+                chatRooms = await _ChatRoomService.GetAll(),
+                ChatRoomName = chatroom?.ChatRoomName,
+                UserChat = string.IsNullOrEmpty(chatroomId) ? new List<UserChatDTO>() :  await _UserChatService.GetChatUser(chatroomId)
             };
+
             return View(chatRoomsViewModels);
         }
 
@@ -102,6 +109,8 @@ namespace ChatRoom.Controllers
         {
             var currentUser = await _UserManager.GetUserAsync(User);
             userChatDTO.fecha = DateTime.Now;
+            var usuario = await _UserService.GetApplicationUser(currentUser.Id);
+            userChatDTO.usuario = $"{usuario.FirstName} {usuario.LastName}";
             return View(new ChatRoomsViewModels { NewMessage = userChatDTO, UserId = currentUser.Id });
         }
     }

@@ -9,8 +9,9 @@
         <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
         <div class="received_msg">
             <div class="received_withd_msg">
+                <span>@Model.NewMessage.usuario</span>
                 <p>
-                   @Model.NewMessage.mensaje
+                    @Model.NewMessage.mensaje
                 </p>
                 <span class="time_date"> @Model.NewMessage.fecha</span>
             </div>
@@ -19,9 +20,9 @@
 }
 else
 {
-
     <div class="outgoing_msg">
         <div class="sent_msg">
+            <span>@Model.NewMessage.usuario</span>
             <p>
                 @Model.NewMessage.mensaje
             </p>

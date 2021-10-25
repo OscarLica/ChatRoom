@@ -1,13 +1,22 @@
-﻿Module.create("hub", {
+﻿/*  creamos el modulo hub*/
+Module.create("hub", {
 
 });
 
+/* agregamos al modulo las funciona de inicializar conexión y enviar mensaje*/
 Module.append("hub", {
     connection: null,
     roomId: "",
-    initConnection: () => {
+    recieve: false,
+    self: this,
 
-        roomId = $("#ChatRoomId").val();
+    /**
+     *  Inicializa la conexión de una sala de chat
+     * @param {any} room
+     */
+    initConnection: (room) => {
+
+        roomId = room;
 
         // creamos el objeto de conexión
         connection = new signalR.HubConnectionBuilder()
@@ -16,15 +25,21 @@ Module.append("hub", {
 
         // indicamos a signalr que inicie, pasando como parametro el nombre del método y el código de la sala
         connection.start().then(() => {
-            connection.invoke("AddRoom", roomId);
+            connection.invoke("AddRoom", document.getElementById("UserId").value, roomId);
         }).catch(error => { console.error(error); });
+
+        return connection;
     },
 
+    /** Envia el mensaje a la sala de chat */
     addEventSend: () => {
+        if (!document.getElementById("btnSend")) return;
+
         document.getElementById("btnSend").addEventListener("click", (event) => {
 
             let user = document.getElementById("UserId").value;
             let message = document.getElementById("messageText").value;
+
             if (!message) return;
             // para enviar el mensaje indicamos a que método del hub queremos que llegue
             connection.invoke("SendMessage", roomId, user, message)
@@ -38,7 +53,6 @@ Module.append("hub", {
                 mensaje: message,
                 UserId: user,
                 chatroomid: $("#ChatRoomId").val()
-
             };
 
             $.post("/Chat/SaveMessage", userChatDTO).then(result => { });
@@ -47,18 +61,27 @@ Module.append("hub", {
 
         });
 
-        // recibimos el message
+        /* recibimos el mensaje enviado*/
         connection.on("recieveMessage", (room, user, message) => {
+
             let userChatDTO = {
                 mensaje: message,
                 UserId: user,
-                chatroomid : $("#ChatRoomId").val()
+                chatroomid: $("#ChatRoomId").val()
 
             };
             $.post("/Chat/ChatTemplate", userChatDTO).then(result => {
                 if (room !== roomId) return;
                 $(".msg_history").append(result);
             });
+
+        });
+
+        /*recibimos el message indicamos que alguin ha iniciado sesión en la sala de chat*/
+        connection.on("ShowWho", (user, message) => {
+            let usuario = document.getElementById("UserId").value;
+            if (usuario !== user)
+                toastr["success"](message);
         });
     }
 

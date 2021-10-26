@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using ChatRoom.Models;
+using ChatRoom.Configuration;
 
 namespace ChatRoom.Data
 {
@@ -13,9 +14,23 @@ namespace ChatRoom.Data
             : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            ModelConfig(builder);
+        }
+
         public DbSet<ChatRooms> ChatRooms { get; set; }
         public DbSet<UserChatRooms> UserChatRooms { get; set; }
         public DbSet<Users> User{ get; set; }
         public DbSet<Message> Messages{ get; set; }
+
+        private void ModelConfig(ModelBuilder modelBuilder)
+        {
+            new ChatRoomConfiguration(modelBuilder.Entity<ChatRooms>());
+        }
+
     }
 }

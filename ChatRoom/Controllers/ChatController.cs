@@ -50,8 +50,8 @@ namespace ChatRoom.Controllers
         ///     Vista principal Index
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public async Task<IActionResult> Index(string chatroomId)
+        [HttpGet("Chat/{chatroomId}")]
+        public async Task<IActionResult> Index(string chatroomId = null)
         {
             var currentUser = await _UserManager.GetUserAsync(User);
             var chatroom = await _ChatRoomService.GetByChatRoomId(chatroomId);
@@ -90,17 +90,6 @@ namespace ChatRoom.Controllers
         }
 
         /// <summary>
-        ///     Guarda el mensaje en base de datos
-        /// </summary>
-        /// <param name="userChatDTO"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<IActionResult> SaveMessage(UserChatDTO userChatDTO) {
-            await _UserChatService.CreateChat(userChatDTO);
-            return Ok("Mensaje guardado");
-        }
-
-        /// <summary>
         ///     Template del chat
         /// </summary>
         /// <param name="userChatDTO"></param>
@@ -108,9 +97,16 @@ namespace ChatRoom.Controllers
         public async Task<IActionResult> ChatTemplate(UserChatDTO userChatDTO)
         {
             var currentUser = await _UserManager.GetUserAsync(User);
+            if (userChatDTO.UserId == "Bot")
+            {
+                userChatDTO.usuario = "Chat Bot";
+            }
+            else {
+
+                var usuario = await _UserService.GetApplicationUser(userChatDTO.UserId);
+                userChatDTO.usuario = $"{usuario.FirstName} {usuario.LastName}";
+            }
             userChatDTO.fecha = DateTime.Now;
-            var usuario = await _UserService.GetApplicationUser(currentUser.Id);
-            userChatDTO.usuario = $"{usuario.FirstName} {usuario.LastName}";
             return View(new ChatRoomsViewModels { NewMessage = userChatDTO, UserId = currentUser.Id });
         }
     }

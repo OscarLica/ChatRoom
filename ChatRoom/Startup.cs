@@ -1,3 +1,4 @@
+using ChatRoom.Configuration;
 using ChatRoom.Data;
 using ChatRoom.Hubs;
 using ChatRoom.Service.Implements;
@@ -30,6 +31,8 @@ namespace ChatRoom
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AppSettings>(Configuration.GetSection("Configurations"));
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -37,10 +40,14 @@ namespace ChatRoom
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
             services.AddControllersWithViews();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IUserChatService, UserChatService>();
             services.AddTransient<IChatRoomService, ChatRoomService>();
+            services.AddTransient<IAzServicesLuis, AzServiceLuis>();
+            services.AddTransient<IIntents, ServiceIntent>();
+            services.AddTransient<IContizacionService, CotizacionService>();
             services.AddSignalR();
         }
 

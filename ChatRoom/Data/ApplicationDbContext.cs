@@ -26,10 +26,12 @@ namespace ChatRoom.Data
         public DbSet<UserChatRooms> UserChatRooms { get; set; }
         public DbSet<Users> User{ get; set; }
         public DbSet<Message> Messages{ get; set; }
+        public DbSet<Intents> Intents { get; set; }
 
         private void ModelConfig(ModelBuilder modelBuilder)
         {
             new ChatRoomConfiguration(modelBuilder.Entity<ChatRooms>());
+            new IntentConfiguration(modelBuilder.Entity<Intents>());
         }
 
     }

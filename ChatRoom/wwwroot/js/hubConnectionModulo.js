@@ -41,21 +41,18 @@ Module.append("hub", {
             let message = document.getElementById("messageText").value;
 
             if (!message) return;
+
             // para enviar el mensaje indicamos a que método del hub queremos que llegue
             connection.invoke("SendMessage", roomId, user, message)
+                .catch(error => { console.error(error); });
+
+            // enviamos el mensaje para ejecutar la cotización
+            connection.invoke("SendCotizacion", roomId, message)
                 .catch(error => { console.error(error); });
 
             // limpiamos la caja de texto
             document.getElementById("messageText").value = "";
             document.getElementById("messageText").focus();
-
-            let userChatDTO = {
-                mensaje: message,
-                UserId: user,
-                chatroomid: $("#ChatRoomId").val()
-            };
-
-            $.post("/Chat/SaveMessage", userChatDTO).then(result => { });
 
             event.preventDefault();
 
@@ -68,11 +65,29 @@ Module.append("hub", {
                 mensaje: message,
                 UserId: user,
                 chatroomid: $("#ChatRoomId").val()
-
             };
+
             $.post("/Chat/ChatTemplate", userChatDTO).then(result => {
                 if (room !== roomId) return;
                 $(".msg_history").append(result);
+                $('.msg_history').scrollTop($('.msg_history')[0].scrollHeight);
+            });
+
+        });
+
+        /*  Devuelve la cotización*/
+        connection.on("ShowCotizacion", (room, message) => {
+
+            let userChatDTO = {
+                mensaje: message,
+                UserId: "Bot",
+                chatroomid: $("#ChatRoomId").val()
+            };
+
+            $.post("/Chat/ChatTemplate", userChatDTO).then(result => {
+                if (room !== roomId) return;
+                $(".msg_history").append(result);
+                $('.msg_history').scrollTop($('.msg_history')[0].scrollHeight);
             });
 
         });

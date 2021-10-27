@@ -7,11 +7,12 @@
         var hubModul = Module.get("hub");
         hubModul.initConnection(chatRoomId);
         hubModul.addEventSend();
+        $('.msg_history').scrollTop($('.msg_history')[0].scrollHeight);
     }
 
     $(document).on("click", "a[data-chat-room]", function () {
         let roomId = $(this).data("chatRoom");
-        window.location.href = "/Chat/Index?chatroomId=" + roomId;
+        window.location.href = "/Chat/" + roomId;
     });
 
     $(document).on("click", "button[data-new-chat-room]", function () {

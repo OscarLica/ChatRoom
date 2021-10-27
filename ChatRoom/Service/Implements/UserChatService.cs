@@ -77,7 +77,7 @@ namespace ChatRoom.Service.Implements
                               mensaje = sms.Content,
                               fecha = sms.Fecha
 
-                          }).OrderBy(x => x.fecha).Take(50).ToListAsync();
+                          }).OrderByDescending(x => x.fecha).Take(50).OrderBy(x => x.fecha).ToListAsync();
 
             return result;
         }

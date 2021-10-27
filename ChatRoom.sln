@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatRoom", "ChatRoom\ChatRoom.csproj", "{F1CAAD6E-4DAA-4549-8FD8-64C2B5280FCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{A3FE6F57-7129-4EC4-B4B4-5638F37CC362}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject", "TestProject\TestProject.csproj", "{A3FE6F57-7129-4EC4-B4B4-5638F37CC362}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

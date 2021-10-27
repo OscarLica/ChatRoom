@@ -16,6 +16,9 @@ namespace TestProject
         /// </summary>
         private ApplicationDbContext _Context;
 
+        /// <summary>
+        ///     Servicio de salas d chat
+        /// </summary>
         private ChatRoomService ChatRoomService;
 
         [SetUp]

@@ -7,6 +7,11 @@ namespace ChatRoom.Service.Interface
 {
     public interface IAzServicesLuis
     {
+        /// <summary>
+        ///     Consulta intensión devuelta pior el app de Azure Luis en base de datos
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         Task<string> GetResponseIntent(string message);
     }
 }

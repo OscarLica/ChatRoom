@@ -30,14 +30,18 @@ namespace ChatRoom.Controllers
         /// </summary>
         private readonly IChatRoomService _ChatRoomService;
 
+        /// <summary>
+        ///     Servico de usuarios
+        /// </summary>
         private readonly IUserService _UserService;
 
-        /// <summary>
-        ///     Constructor base inicializa dependencias
-        /// </summary>
-        /// <param name="userManager"></param>
-        /// <param name="userChatService"></param>
-        /// <param name="chatRoomService"></param>
+       /// <summary>
+       ///      Constructor base, inicializa dependencias
+       /// </summary>
+       /// <param name="userManager"></param>
+       /// <param name="userChatService"></param>
+       /// <param name="chatRoomService"></param>
+       /// <param name="userService"></param>
         public ChatController(UserManager<IdentityUser> userManager, IUserChatService userChatService, IChatRoomService chatRoomService, IUserService userService)
         {
             _UserManager = userManager;

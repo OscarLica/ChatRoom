@@ -55,20 +55,25 @@ namespace ChatRoom.Hubs
         /// <returns></returns>
         public async Task SendCotizacion(string room, string message)
         {
-            // si el mensaje no contiene dicha palabra clave, retornamos
-            if (!message.Replace(" ", "").ToLower().Contains("stock = stock_code".Replace(" ", ""))) return;
+            try
+            {
+                // si el mensaje no contiene dicha palabra clave, retornamos
+                if (!message.Replace(" ", "").ToLower().Contains("stock = stock_code".Replace(" ", ""))) return;
 
-            // consultamos la cotización
-            var result = await _ContizacionService.GetCotizacion(message);
-
-            // consultamos al usuario bot
-            var bot = await _UserService.GetApplicationUser("Bot");
-            // si no existe dicho usuario lo creamos
-            if (bot is null) await _UserService.CreateUser(new Models.Users { FirstName = "Chat", LastName = "Bot", UserId = "Bot" });
-            // guardamos el resultado del bot
-            await _UserChatService.CreateChat(new Models.DTO.UserChatDTO { chatroomid = room, UserId = "Bot", mensaje = result });
-            // mostramos el mensaje en pantalla
-            await Clients.Group(room).SendAsync("ShowCotizacion", room, result);
+                // consultamos la cotización
+                var result = await _ContizacionService.GetCotizacion(message);
+                // consultamos al usuario bot
+                var bot = await _UserService.GetApplicationUser("Bot");
+                // si no existe dicho usuario lo creamos
+                if (bot is null) await _UserService.CreateUser(new Models.Users { FirstName = "Chat", LastName = "Bot", UserId = "Bot" });
+                // guardamos el resultado del bot
+                await _UserChatService.CreateChat(new Models.DTO.UserChatDTO { chatroomid = room, UserId = "Bot", mensaje = result });
+                // mostramos el mensaje en pantalla
+                await Clients.Group(room).SendAsync("ShowCotizacion", room, result);
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         /// <summary>
